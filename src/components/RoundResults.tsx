@@ -1,23 +1,26 @@
 import React from 'react';
 import { GameResult } from '../types';
+import { CustomizationOptions } from '../types/customization';
 
 interface RoundResultsProps {
   results: GameResult[];
   maxRounds?: number;
+  customization: CustomizationOptions;
+  fontSize: { score: string; label: string; round: string };
 }
 
-const RoundResults: React.FC<RoundResultsProps> = ({ results, maxRounds = 11 }) => {
+const RoundResults: React.FC<RoundResultsProps> = ({ results, maxRounds = 11, customization, fontSize }) => {
   const getResultColor = (result: GameResult): string => {
     switch (result) {
       case 'win':
-        return '#22c55e';
+        return customization.winColor;
       case 'loss':
-        return '#ef4444';
+        return customization.lossColor;
       case 'draw':
-        return '#9ca3af';
+        return customization.drawColor;
       case 'none':
       default:
-        return '#374151';
+        return customization.noneColor;
     }
   };
 
@@ -28,14 +31,14 @@ const RoundResults: React.FC<RoundResultsProps> = ({ results, maxRounds = 11 }) 
 
   return (
     <div style={{
-      backgroundColor: 'rgba(0, 0, 0, 0.85)',
+      backgroundColor: customization.boxBgColor,
       padding: '12px 16px',
       borderRadius: '8px',
-      border: '1px solid rgba(255, 255, 255, 0.2)',
+      border: `1px solid ${customization.textColor}33`,
     }}>
       <div style={{
-        fontSize: '11px',
-        color: 'rgba(255, 255, 255, 0.6)',
+        fontSize: fontSize.label,
+        color: `${customization.textColor}99`,
         fontWeight: '600',
         marginBottom: '10px',
         textTransform: 'uppercase',
@@ -67,18 +70,18 @@ const RoundResults: React.FC<RoundResultsProps> = ({ results, maxRounds = 11 }) 
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                fontSize: '10px',
+                fontSize: fontSize.round,
                 fontWeight: '700',
-                color: result === 'none' ? 'rgba(255, 255, 255, 0.3)' : '#ffffff',
-                border: result === 'none' ? '1px solid rgba(255, 255, 255, 0.1)' : 'none',
+                color: result === 'none' ? `${customization.textColor}4d` : customization.textColor,
+                border: result === 'none' ? `1px solid ${customization.textColor}1a` : 'none',
                 transition: 'all 0.2s ease',
               }}
             >
               {result !== 'none' && (result === 'win' ? 'W' : result === 'loss' ? 'L' : 'D')}
             </div>
             <div style={{
-              fontSize: '8px',
-              color: 'rgba(255, 255, 255, 0.5)',
+              fontSize: `calc(${fontSize.round} - 1px)`,
+              color: `${customization.textColor}80`,
               marginTop: '3px',
               fontWeight: '500',
               whiteSpace: 'nowrap',

@@ -2,10 +2,11 @@ import React, { useState } from 'react';
 
 interface UsernameInputProps {
   onSubmit: (username: string) => void;
+  onCustomize: () => void;
   isLoading: boolean;
 }
 
-const UsernameInput: React.FC<UsernameInputProps> = ({ onSubmit, isLoading }) => {
+const UsernameInput: React.FC<UsernameInputProps> = ({ onSubmit, onCustomize, isLoading }) => {
   const [username, setUsername] = useState('');
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -62,6 +63,23 @@ const UsernameInput: React.FC<UsernameInputProps> = ({ onSubmit, isLoading }) =>
           }}
         >
           {isLoading ? 'Loading...' : 'Load'}
+        </button>
+        <button
+          type="button"
+          onClick={onCustomize}
+          style={{
+            padding: '8px 16px',
+            backgroundColor: '#6366f1',
+            border: 'none',
+            borderRadius: '4px',
+            color: '#ffffff',
+            fontSize: '14px',
+            fontWeight: '600',
+            cursor: 'pointer',
+            transition: 'background-color 0.2s',
+          }}
+        >
+          Customize
         </button>
       </div>
     </form>

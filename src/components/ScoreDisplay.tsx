@@ -1,31 +1,34 @@
 import React from 'react';
+import { CustomizationOptions } from '../types/customization';
 
 interface ScoreDisplayProps {
   score: number;
   total: number;
+  customization: CustomizationOptions;
+  fontSize: { score: string; label: string; round: string };
 }
 
-const ScoreDisplay: React.FC<ScoreDisplayProps> = ({ score, total }) => {
+const ScoreDisplay: React.FC<ScoreDisplayProps> = ({ score, total, customization, fontSize }) => {
   return (
     <div style={{
-      backgroundColor: 'rgba(0, 0, 0, 0.85)',
+      backgroundColor: customization.boxBgColor,
       padding: '12px 20px',
       borderRadius: '8px',
       marginBottom: '12px',
-      border: '1px solid rgba(255, 255, 255, 0.2)',
+      border: `1px solid ${customization.textColor}33`,
     }}>
       <div style={{
-        fontSize: '32px',
+        fontSize: fontSize.score,
         fontWeight: '700',
-        color: '#ffffff',
+        color: customization.textColor,
         letterSpacing: '-0.5px',
         marginBottom: '4px',
       }}>
         {score % 1 === 0 ? score : score.toFixed(1)}/{total}
       </div>
       <div style={{
-        fontSize: '12px',
-        color: 'rgba(255, 255, 255, 0.7)',
+        fontSize: fontSize.label,
+        color: `${customization.textColor}b3`,
         fontWeight: '500',
         textTransform: 'uppercase',
         letterSpacing: '0.5px',
