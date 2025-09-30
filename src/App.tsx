@@ -60,7 +60,12 @@ function App() {
     }
   };
 
-  const score = games.filter(g => g.result === 'win').length;
+  const score = games.reduce((total, game) => {
+    if (game.result === 'win') return total + 1;
+    if (game.result === 'draw') return total + 0.5;
+    return total;
+  }, 0);
+  
   const results: GameResult[] = games.map(g => g.result);
 
   return (

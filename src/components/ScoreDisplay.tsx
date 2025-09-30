@@ -21,7 +21,7 @@ const ScoreDisplay: React.FC<ScoreDisplayProps> = ({ score, total }) => {
         letterSpacing: '-0.5px',
         marginBottom: '4px',
       }}>
-        {score}/{total}
+        {score % 1 === 0 ? score : score.toFixed(1)}/{total}
       </div>
       <div style={{
         fontSize: '12px',
