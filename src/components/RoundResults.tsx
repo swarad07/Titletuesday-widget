@@ -30,62 +30,43 @@ const RoundResults: React.FC<RoundResultsProps> = ({ results, maxRounds = 11, cu
   });
 
   return (
-    <div style={{
-      backgroundColor: customization.boxBgColor,
-      padding: '12px 16px',
-      borderRadius: '8px',
-      border: `1px solid ${customization.textColor}33`,
-    }}>
-      <div style={{
-        fontSize: fontSize.label,
-        color: `${customization.textColor}99`,
-        fontWeight: '600',
-        marginBottom: '10px',
-        textTransform: 'uppercase',
-        letterSpacing: '0.5px',
-      }}>
+    <div 
+      className="backdrop-blur-sm rounded-xl shadow-2xl transition-all duration-300 hover:shadow-3xl p-4"
+      style={{
+        backgroundColor: customization.boxBgColor,
+        border: `1px solid ${customization.textColor}33`,
+      }}
+    >
+      <div 
+        className="font-semibold uppercase tracking-wider mb-3"
+        style={{
+          fontSize: fontSize.label,
+          color: `${customization.textColor}99`,
+        }}
+      >
         Round Results
       </div>
-      <div style={{
-        display: 'grid',
-        gridTemplateColumns: 'repeat(11, minmax(0, 1fr))',
-        gap: '4px',
-        width: '100%',
-        overflow: 'hidden',
-      }}>
+      <div className="grid grid-cols-11 gap-1 w-full">{/* Round boxes */}
         {rounds.map(({ round, result }) => (
-          <div key={round} style={{ 
-            display: 'flex', 
-            flexDirection: 'column', 
-            alignItems: 'center',
-            minWidth: 0,
-          }}>
+          <div key={round} className="flex flex-col items-center min-w-0">
             <div
+              className="w-full max-w-[26px] h-[26px] rounded flex items-center justify-center font-bold transition-all duration-200 hover:scale-110"
               style={{
-                width: '100%',
-                maxWidth: '26px',
-                height: '26px',
                 backgroundColor: getResultColor(result),
-                borderRadius: '3px',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
                 fontSize: fontSize.round,
-                fontWeight: '700',
                 color: result === 'none' ? `${customization.textColor}4d` : customization.textColor,
                 border: result === 'none' ? `1px solid ${customization.textColor}1a` : 'none',
-                transition: 'all 0.2s ease',
               }}
             >
               {result !== 'none' && (result === 'win' ? 'W' : result === 'loss' ? 'L' : 'D')}
             </div>
-            <div style={{
-              fontSize: `calc(${fontSize.round} - 1px)`,
-              color: `${customization.textColor}80`,
-              marginTop: '3px',
-              fontWeight: '500',
-              whiteSpace: 'nowrap',
-            }}>
+            <div 
+              className="mt-1 font-medium whitespace-nowrap"
+              style={{
+                fontSize: `calc(${fontSize.round} - 1px)`,
+                color: `${customization.textColor}80`,
+              }}
+            >
               R{round}
             </div>
           </div>

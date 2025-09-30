@@ -10,29 +10,29 @@ interface ScoreDisplayProps {
 
 const ScoreDisplay: React.FC<ScoreDisplayProps> = ({ score, total, customization, fontSize }) => {
   return (
-    <div style={{
-      backgroundColor: customization.boxBgColor,
-      padding: '12px 20px',
-      borderRadius: '8px',
-      marginBottom: '12px',
-      border: `1px solid ${customization.textColor}33`,
-    }}>
-      <div style={{
-        fontSize: fontSize.score,
-        fontWeight: '700',
-        color: customization.textColor,
-        letterSpacing: '-0.5px',
-        marginBottom: '4px',
-      }}>
+    <div 
+      className="backdrop-blur-sm rounded-xl mb-4 shadow-2xl transition-all duration-300 hover:shadow-3xl p-5"
+      style={{
+        backgroundColor: customization.boxBgColor,
+        border: `1px solid ${customization.textColor}33`,
+      }}
+    >
+      <div 
+        className="font-bold tracking-tight mb-1"
+        style={{
+          fontSize: fontSize.score,
+          color: customization.textColor,
+        }}
+      >
         {score % 1 === 0 ? score : score.toFixed(1)}/{total}
       </div>
-      <div style={{
-        fontSize: fontSize.label,
-        color: `${customization.textColor}b3`,
-        fontWeight: '500',
-        textTransform: 'uppercase',
-        letterSpacing: '0.5px',
-      }}>
+      <div 
+        className="font-medium uppercase tracking-wider"
+        style={{
+          fontSize: fontSize.label,
+          color: `${customization.textColor}b3`,
+        }}
+      >
         Titled Tuesday Score
       </div>
     </div>

@@ -17,72 +17,38 @@ const UsernameInput: React.FC<UsernameInputProps> = ({ onSubmit, onCustomize, is
   };
 
   return (
-    <form onSubmit={handleSubmit} style={{
-      backgroundColor: 'rgba(0, 0, 0, 0.85)',
-      padding: '16px 20px',
-      borderRadius: '8px',
-      marginBottom: '12px',
-      border: '1px solid rgba(255, 255, 255, 0.2)',
-    }}>
-      <div style={{
-        display: 'flex',
-        gap: '8px',
-        alignItems: 'center',
-      }}>
-        <input
-          type="text"
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
-          placeholder="Chess.com username"
-          disabled={isLoading}
-          style={{
-            flex: 1,
-            padding: '8px 12px',
-            backgroundColor: 'rgba(255, 255, 255, 0.1)',
-            border: '1px solid rgba(255, 255, 255, 0.3)',
-            borderRadius: '4px',
-            color: '#ffffff',
-            fontSize: '14px',
-            outline: 'none',
-            fontFamily: 'inherit',
-          }}
-        />
-        <button
-          type="submit"
-          disabled={isLoading || !username.trim()}
-          style={{
-            padding: '8px 16px',
-            backgroundColor: isLoading || !username.trim() ? '#4b5563' : '#3b82f6',
-            border: 'none',
-            borderRadius: '4px',
-            color: '#ffffff',
-            fontSize: '14px',
-            fontWeight: '600',
-            cursor: isLoading || !username.trim() ? 'not-allowed' : 'pointer',
-            transition: 'background-color 0.2s',
-          }}
-        >
-          {isLoading ? 'Loading...' : 'Load'}
-        </button>
-        <button
-          type="button"
-          onClick={onCustomize}
-          style={{
-            padding: '8px 16px',
-            backgroundColor: '#6366f1',
-            border: 'none',
-            borderRadius: '4px',
-            color: '#ffffff',
-            fontSize: '14px',
-            fontWeight: '600',
-            cursor: 'pointer',
-            transition: 'background-color 0.2s',
-          }}
-        >
-          Customize
-        </button>
-      </div>
-    </form>
+    <div className="space-y-3 mb-4">
+      <form onSubmit={handleSubmit} className="bg-black/85 backdrop-blur-sm p-4 rounded-xl border border-white/20 shadow-xl">
+        <div className="flex gap-2">
+          <input
+            type="text"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+            placeholder="Chess.com username"
+            disabled={isLoading}
+            className="flex-1 bg-white/10 border border-white/30 rounded-lg px-4 py-2.5 text-white text-sm placeholder:text-white/50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+          />
+          <button
+            type="submit"
+            disabled={isLoading || !username.trim()}
+            className="px-5 py-2.5 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-600 disabled:cursor-not-allowed text-white text-sm font-semibold rounded-lg transition-all shadow-lg disabled:shadow-none hover:shadow-blue-600/50"
+          >
+            {isLoading ? 'Loading...' : 'Load'}
+          </button>
+        </div>
+      </form>
+      
+      <button
+        type="button"
+        onClick={onCustomize}
+        className="w-full px-4 py-2.5 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white text-sm font-semibold rounded-lg transition-all shadow-lg hover:shadow-indigo-600/50 flex items-center justify-center gap-2"
+      >
+        <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" />
+        </svg>
+        Customize Widget
+      </button>
+    </div>
   );
 };
 

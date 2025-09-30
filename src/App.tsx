@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import UsernameInput from './components/UsernameInput';
 import ScoreDisplay from './components/ScoreDisplay';
 import RoundResults from './components/RoundResults';
-import CustomizeModal from './components/CustomizeModal';
+import CustomizePanel from './components/CustomizePanel';
 import { fetchPlayerGames, filterTitledTuesdayGames } from './services/chessComApi';
 import { TitledTuesdayGame, GameResult } from './types';
 import { CustomizationOptions, DEFAULT_CUSTOMIZATION } from './types/customization';
@@ -96,7 +96,7 @@ function App() {
     }
   };
 
-  const handleCustomizationSave = (options: CustomizationOptions) => {
+  const handleCustomizationChange = (options: CustomizationOptions) => {
     setCustomization(options);
     updateURL(username, options);
   };
@@ -120,16 +120,11 @@ function App() {
   const fontSizes = getFontSizeValue();
 
   return (
-    <div style={{
-      minHeight: '100vh',
-      backgroundColor: customization.bgColor,
-      padding: '20px',
-      fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
-    }}>
-      <div style={{
-        width: '340px',
-        margin: '0 auto',
-      }}>
+    <div 
+      className="min-h-screen p-6 transition-colors duration-300"
+      style={{ backgroundColor: customization.bgColor }}
+    >
+      <div className="w-full max-w-[360px] mx-auto">
         <UsernameInput 
           onSubmit={handleLoadGames} 
           onCustomize={() => setIsCustomizeOpen(true)}
@@ -137,7 +132,7 @@ function App() {
         />
         
         {username && (
-          <>
+          <div className="animate-in fade-in duration-500">
             <ScoreDisplay
               score={score}
               total={games.length}
@@ -150,27 +145,21 @@ function App() {
               customization={customization}
               fontSize={fontSizes}
             />
-          </>
+          </div>
         )}
 
         {isLoading && (
-          <div style={{
-            textAlign: 'center',
-            color: '#000000',
-            fontSize: '14px',
-            marginTop: '20px',
-            fontWeight: '600',
-          }}>
+          <div className="text-center text-black text-sm mt-8 font-semibold animate-pulse">
             Loading games...
           </div>
         )}
       </div>
 
-      <CustomizeModal
+      <CustomizePanel
         isOpen={isCustomizeOpen}
         onClose={() => setIsCustomizeOpen(false)}
-        onSave={handleCustomizationSave}
-        currentOptions={customization}
+        options={customization}
+        onOptionsChange={handleCustomizationChange}
       />
     </div>
   );
