@@ -9,6 +9,11 @@ export interface CustomizationOptions {
   fontSize: string;
 }
 
+export interface SessionConfig {
+  mode: 'titled-tuesday' | 'custom';
+  startTime?: number; // Unix timestamp in seconds
+}
+
 export const DEFAULT_CUSTOMIZATION: CustomizationOptions = {
   bgColor: '#00FF00',
   textColor: '#ffffff',
@@ -18,4 +23,8 @@ export const DEFAULT_CUSTOMIZATION: CustomizationOptions = {
   noneColor: '#374151',
   boxBgColor: 'rgba(0, 0, 0, 0.85)',
   fontSize: 'medium',
+};
+
+export const DEFAULT_SESSION: SessionConfig = {
+  mode: 'titled-tuesday',
 };

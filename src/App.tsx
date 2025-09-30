@@ -3,9 +3,9 @@ import UsernameInput from './components/UsernameInput';
 import ScoreDisplay from './components/ScoreDisplay';
 import RoundResults from './components/RoundResults';
 import CustomizePanel from './components/CustomizePanel';
-import { fetchPlayerGames, filterTitledTuesdayGames } from './services/chessComApi';
+import { fetchPlayerGames, filterSessionGames } from './services/chessComApi';
 import { TitledTuesdayGame, GameResult } from './types';
-import { CustomizationOptions, DEFAULT_CUSTOMIZATION } from './types/customization';
+import { CustomizationOptions, DEFAULT_CUSTOMIZATION, SessionConfig, DEFAULT_SESSION } from './types/customization';
 
 function App() {
   const [username, setUsername] = useState<string>('');
@@ -13,6 +13,7 @@ function App() {
   const [isLoading, setIsLoading] = useState(false);
   const [lastGameCount, setLastGameCount] = useState(0);
   const [customization, setCustomization] = useState<CustomizationOptions>(DEFAULT_CUSTOMIZATION);
+  const [sessionConfig, setSessionConfig] = useState<SessionConfig>(DEFAULT_SESSION);
   const [isCustomizeOpen, setIsCustomizeOpen] = useState(false);
 
   useEffect(() => {
@@ -31,10 +32,19 @@ function App() {
       fontSize: params.get('fontSize') || DEFAULT_CUSTOMIZATION.fontSize,
     };
     
+    // Load session config from URL
+    const mode = params.get('sessionMode') as 'titled-tuesday' | 'custom' | null;
+    const startTimeParam = params.get('sessionStart');
+    const sessionOptions: SessionConfig = {
+      mode: mode || DEFAULT_SESSION.mode,
+      startTime: startTimeParam ? parseInt(startTimeParam) : undefined,
+    };
+    
     setCustomization(customOptions);
+    setSessionConfig(sessionOptions);
     
     if (usernameParam) {
-      handleLoadGames(usernameParam);
+      handleLoadGames(usernameParam, sessionOptions);
     }
   }, []);
 
@@ -44,12 +54,12 @@ function App() {
     const pollInterval = setInterval(async () => {
       try {
         const fetchedGames = await fetchPlayerGames(username);
-        const ttGames = filterTitledTuesdayGames(fetchedGames, username);
+        const sessionGames = filterSessionGames(fetchedGames, username, sessionConfig);
         
-        if (ttGames.length > lastGameCount) {
-          console.log(`New games detected: ${ttGames.length} games`);
-          setGames(ttGames);
-          setLastGameCount(ttGames.length);
+        if (sessionGames.length > lastGameCount) {
+          console.log(`New games detected: ${sessionGames.length} games`);
+          setGames(sessionGames);
+          setLastGameCount(sessionGames.length);
         }
       } catch (error) {
         console.error('Error polling for new games:', error);
@@ -57,9 +67,9 @@ function App() {
     }, 30000);
 
     return () => clearInterval(pollInterval);
-  }, [username, lastGameCount]);
+  }, [username, lastGameCount, sessionConfig]);
 
-  const updateURL = (user?: string, customOptions?: CustomizationOptions) => {
+  const updateURL = (user?: string, customOptions?: CustomizationOptions, session?: SessionConfig) => {
     const params = new URLSearchParams(window.location.search);
     
     if (user) {
@@ -76,19 +86,33 @@ function App() {
     params.set('boxBgColor', options.boxBgColor);
     params.set('fontSize', options.fontSize);
     
+    const sessionOpts = session || sessionConfig;
+    params.set('sessionMode', sessionOpts.mode);
+    if (sessionOpts.startTime) {
+      params.set('sessionStart', sessionOpts.startTime.toString());
+    } else {
+      params.delete('sessionStart');
+    }
+    
     window.history.replaceState({}, '', `${window.location.pathname}?${params}`);
   };
 
-  const handleLoadGames = async (user: string) => {
+  const handleLoadGames = async (user: string, session?: SessionConfig) => {
     setIsLoading(true);
     setUsername(user);
-    updateURL(user);
+    
+    const sessionToUse = session || sessionConfig;
+    if (session) {
+      setSessionConfig(session);
+    }
+    
+    updateURL(user, undefined, sessionToUse);
 
     try {
       const fetchedGames = await fetchPlayerGames(user);
-      const ttGames = filterTitledTuesdayGames(fetchedGames, user);
-      setGames(ttGames);
-      setLastGameCount(ttGames.length);
+      const sessionGames = filterSessionGames(fetchedGames, user, sessionToUse);
+      setGames(sessionGames);
+      setLastGameCount(sessionGames.length);
     } catch (error) {
       console.error('Error loading games:', error);
     } finally {
@@ -128,7 +152,9 @@ function App() {
         <UsernameInput 
           onSubmit={handleLoadGames} 
           onCustomize={() => setIsCustomizeOpen(true)}
-          isLoading={isLoading} 
+          isLoading={isLoading}
+          sessionConfig={sessionConfig}
+          onSessionChange={setSessionConfig}
         />
         
         {username && (

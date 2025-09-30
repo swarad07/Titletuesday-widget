@@ -1,4 +1,5 @@
 import { ChessComGame, TitledTuesdayGame } from '../types';
+import { SessionConfig } from '../types/customization';
 
 export const fetchPlayerGames = async (username: string): Promise<ChessComGame[]> => {
   const now = new Date();
@@ -33,21 +34,31 @@ const isGameFromTodayOrYesterday = (endTime: number): boolean => {
   return gameDate >= yesterdayStart;
 };
 
-export const filterTitledTuesdayGames = (
+export const filterSessionGames = (
   games: ChessComGame[],
-  username: string
+  username: string,
+  sessionConfig: SessionConfig
 ): TitledTuesdayGame[] => {
-  const titledTuesdayGames = games.filter((game) => {
-    if (!game.tournament) return false;
-    const tournamentUrl = game.tournament.toLowerCase();
-    const isTitledTuesday = tournamentUrl.includes('titled-tuesday') || tournamentUrl.includes('titled tuesday');
-    
-    if (!isTitledTuesday) return false;
-    
-    return isGameFromTodayOrYesterday(game.end_time);
+  const sessionGames = games.filter((game) => {
+    if (sessionConfig.mode === 'titled-tuesday') {
+      // Titled Tuesday mode: filter by tournament name and today/yesterday
+      if (!game.tournament) return false;
+      const tournamentUrl = game.tournament.toLowerCase();
+      const isTitledTuesday = tournamentUrl.includes('titled-tuesday') || tournamentUrl.includes('titled tuesday');
+      
+      if (!isTitledTuesday) return false;
+      
+      return isGameFromTodayOrYesterday(game.end_time);
+    } else {
+      // Custom session mode: filter by start time
+      if (!sessionConfig.startTime) return false;
+      
+      // Include games that ended after the session start time
+      return game.end_time >= sessionConfig.startTime;
+    }
   });
 
-  return titledTuesdayGames.map((game, index) => {
+  return sessionGames.map((game, index) => {
     const isWhite = game.white.username.toLowerCase() === username.toLowerCase();
     const playerColor = isWhite ? game.white : game.black;
     const opponent = isWhite ? game.black.username : game.white.username;
