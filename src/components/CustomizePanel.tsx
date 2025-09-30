@@ -41,24 +41,16 @@ const CustomizePanel: React.FC<CustomizePanelProps> = ({
   );
 
   return (
-    <>
-      {/* Backdrop */}
-      <div 
-        className="fixed inset-0 bg-black/50 backdrop-blur-sm z-40 transition-opacity"
-        onClick={onClose}
-      />
-      
-      {/* Panel */}
-      <div className="fixed right-0 top-0 bottom-0 w-96 bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 shadow-2xl border-l border-gray-700/50 z-50 flex flex-col">
+    <div className="fixed right-0 top-0 bottom-0 w-96 bg-gray-900 shadow-2xl border-l border-gray-700 z-50 flex flex-col">
         {/* Header */}
-        <div className="p-6 border-b border-gray-700/50 flex items-center justify-between bg-gray-900/50 backdrop-blur-sm">
+        <div className="p-6 border-b border-gray-700 flex items-center justify-between">
           <div>
             <h2 className="text-xl font-bold text-white">Customize</h2>
             <p className="text-xs text-gray-400 mt-1">Changes apply instantly</p>
           </div>
           <button
             onClick={onClose}
-            className="text-gray-400 hover:text-white transition-all p-2 rounded-lg hover:bg-white/10 hover:rotate-90 duration-200"
+            className="text-gray-400 hover:text-white transition-colors p-2 rounded-lg hover:bg-gray-800"
           >
             <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -146,9 +138,9 @@ const CustomizePanel: React.FC<CustomizePanelProps> = ({
                 <button
                   key={size}
                   onClick={() => onOptionsChange({ ...options, fontSize: size })}
-                  className={`px-4 py-3 rounded-lg font-medium text-sm capitalize transition-all ${
+                  className={`px-4 py-3 rounded-lg font-medium text-sm capitalize transition-colors ${
                     options.fontSize === size
-                      ? 'bg-blue-600 text-white shadow-lg shadow-blue-600/30'
+                      ? 'bg-blue-600 text-white'
                       : 'bg-gray-800 text-gray-400 hover:bg-gray-700 hover:text-white'
                   }`}
                 >
@@ -160,7 +152,7 @@ const CustomizePanel: React.FC<CustomizePanelProps> = ({
         </div>
 
         {/* Footer */}
-        <div className="p-6 border-t border-gray-700/50 bg-gray-900/50 backdrop-blur-sm space-y-3">
+        <div className="p-6 border-t border-gray-700">
           <button
             onClick={handleReset}
             className="w-full px-4 py-3 bg-gray-800 hover:bg-gray-700 text-white rounded-lg font-medium transition-colors flex items-center justify-center gap-2"
@@ -171,8 +163,7 @@ const CustomizePanel: React.FC<CustomizePanelProps> = ({
             Reset to Default
           </button>
         </div>
-      </div>
-    </>
+    </div>
   );
 };
 
