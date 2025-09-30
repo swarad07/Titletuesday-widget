@@ -1,48 +1,58 @@
-# Titled Tuesday Widgets
+# Titled Tuesday Widget
 
-OBS widget for Titled Tuesday chess streamers showing real-time game results and accuracy analysis.
+OBS widget for Titled Tuesday chess streamers showing real-time game results.
+
+## 🎥 Live Demo
+
+**Hosted at:** [titletuesday-widget.vercel.app](https://titletuesday-widget.vercel.app)
 
 ## Features
 
-- 📊 Live score tracking (wins/total games)
+- 📊 Live score tracking with proper chess scoring (wins = 1pt, draws = 0.5pt)
 - 🎯 11-round results grid with color-coded outcomes
-- 📈 Real-time average accuracy calculation using external eval API
 - 🔄 Auto-polling every 30 seconds for new games
-- 🎮 Streaming accuracy updates as games are analyzed (updates live!)
 - 📅 Smart filtering - only shows today's and yesterday's Titled Tuesday games
 - ✅ Handles all 15 Chess.com result codes correctly
 - 🎨 Chroma-key ready (green background for easy OBS removal)
 - 🔗 URL-based configuration for easy streaming setup
 
-## Quick Start
+## Usage for Streamers
+
+**No installation needed!** Just add to OBS:
+
+1. In OBS Studio, add a **Browser Source**
+2. Configure the source:
+   - **URL:** `https://titletuesday-widget.vercel.app/?username=YOUR_CHESS_COM_USERNAME`
+   - **Width:** `360`
+   - **Height:** `400`
+   - ✅ Check **"Shutdown source when not visible"**
+3. Add **Chroma Key filter** to remove green background:
+   - Right-click source → Filters → Add "Chroma Key"
+   - **Key Color Type:** Green
+   - **Similarity:** 400
+   - **Smoothness:** 80
+
+**Example URLs:**
+- `https://titletuesday-widget.vercel.app/?username=Hikaru`
+- `https://titletuesday-widget.vercel.app/?username=magnuscarlsen`
+- `https://titletuesday-widget.vercel.app/?username=viditchess`
+
+**The widget automatically:**
+- Shows only today's and yesterday's Titled Tuesday games
+- Updates every 30 seconds to catch new games
+- Displays results immediately when games finish
+- Calculates score with proper chess rules (0.5 for draws)
+
+## For Developers
+
+### Local Development
 
 ```bash
+git clone https://github.com/Bot-Rakshit/Titletuesday-widget.git
+cd Titletuesday-widget
 npm install
 npm run dev
 ```
-
-## Usage
-
-### For Streamers
-
-1. Start the dev server: `npm run dev`
-2. Open in browser: `http://localhost:5173/?username=viditchess`
-3. Add as Browser Source in OBS:
-   - URL: `http://localhost:5173/?username=YOUR_CHESS_COM_USERNAME`
-   - Width: 360px
-   - Height: 400px
-   - Check "Shutdown source when not visible"
-4. In OBS, right-click the source → Filters → Add "Chroma Key"
-   - Key Color Type: Green
-   - Similarity: 400
-   - Smoothness: 80
-
-**The widget will automatically:**
-- Filter to show only today's and yesterday's Titled Tuesday games
-- Poll Chess.com API every 30 seconds for new games
-- Analyze each game using external evaluation API
-- Update accuracy in real-time as each position is evaluated
-- Display results immediately when new games finish
 
 ### Building for Production
 
@@ -53,44 +63,29 @@ npm run preview
 
 ## Color Coding
 
-- 🟢 **Green**: Win
-- 🔴 **Red**: Loss  
-- ⚪ **Grey**: Draw
+- 🟢 **Green**: Win (1 point)
+- 🔴 **Red**: Loss (0 points)
+- ⚪ **Grey**: Draw (0.5 points)
 - ⚫ **Dark Grey**: Round not played yet
 
 ## How It Works
 
-### Game Filtering
-- Fetches games from Chess.com API for current month
-- Filters to only Titled Tuesday tournaments
-- Shows only games from today and yesterday
-- Automatically detects new games every 30 seconds
+1. **Fetches games** from Chess.com API for the current month
+2. **Filters** to only Titled Tuesday tournaments from today/yesterday
+3. **Polls every 30 seconds** to detect new games automatically
+4. **Calculates score** using standard chess rules (1/0.5/0)
+5. **Updates display** in real-time when new games complete
 
-### Accuracy Analysis
-- Uses external evaluation API: `eval.plc.hadron43.in`
-- Extracts FEN positions from PGN for each move
-- Evaluates positions before and after player moves
-- Calculates centipawn loss per move
-- Converts centipawn loss to accuracy percentage
-- Streams updates in real-time during analysis
-- Formula: `103.1668 * exp(-0.04354 * cpLoss/100) - 3.1669`
+## Technical Details
 
-### API
+- **API:** Chess.com Public API
+- **Frontend:** React 18 + TypeScript + Vite
+- **Hosting:** Vercel
+- **Polling:** 30-second intervals
+- **Dimensions:** 360px × 400px (optimized for stream overlays)
 
-The widget fetches data from Chess.com's public API:
-- `https://api.chess.com/pub/player/{username}/games/{year}/{month}`
+## Deployment
 
-## Tech Stack
+The widget is automatically deployed to Vercel from the `main` branch.
 
-- React 18 + TypeScript
-- Vite
-- Chess.js for PGN parsing and FEN extraction
-- External Evaluation API for position analysis
-
-## Notes
-
-- Analysis takes time as API is called for each position
-- Accuracy updates stream in real-time as positions are evaluated
-- Widget continues polling in background for new games
-- Designed for 340px width for compact stream overlay
-- API calls are sequential to avoid rate limiting
+**Live URL:** [titletuesday-widget.vercel.app](https://titletuesday-widget.vercel.app)
