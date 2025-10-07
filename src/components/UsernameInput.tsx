@@ -1,63 +1,24 @@
 import React, { useState } from 'react';
-import { SessionConfig } from '../types/customization';
 
 interface UsernameInputProps {
-  onSubmit: (username: string, session?: SessionConfig) => void;
+  onSubmit: (username: string) => void;
   onCustomize: () => void;
   isLoading: boolean;
-  sessionConfig: SessionConfig;
-  onSessionChange: (config: SessionConfig) => void;
 }
 
 const UsernameInput: React.FC<UsernameInputProps> = ({ 
   onSubmit, 
   onCustomize, 
-  isLoading, 
-  sessionConfig, 
-  onSessionChange 
+  isLoading
 }) => {
   const [username, setUsername] = useState('');
   const [copied, setCopied] = useState(false);
-  const [showSessionOptions, setShowSessionOptions] = useState(false);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (username.trim()) {
-      onSubmit(username.trim(), sessionConfig);
+      onSubmit(username.trim());
     }
-  };
-  
-  const handleSessionModeChange = (mode: 'titled-tuesday' | 'custom') => {
-    if (mode === 'custom' && !sessionConfig.startTime) {
-      // Set to current time by default
-      onSessionChange({ mode, startTime: Math.floor(Date.now() / 1000) });
-    } else if (mode === 'titled-tuesday') {
-      onSessionChange({ mode });
-    } else {
-      onSessionChange({ ...sessionConfig, mode });
-    }
-  };
-  
-  const handleTimeChange = (type: 'now' | 'custom', customTime?: string) => {
-    if (type === 'now') {
-      onSessionChange({ ...sessionConfig, startTime: Math.floor(Date.now() / 1000) });
-    } else if (customTime) {
-      // Convert local datetime to Unix timestamp
-      const timestamp = Math.floor(new Date(customTime).getTime() / 1000);
-      onSessionChange({ ...sessionConfig, startTime: timestamp });
-    }
-  };
-  
-  const getLocalDateTimeString = () => {
-    if (!sessionConfig.startTime) return '';
-    const date = new Date(sessionConfig.startTime * 1000);
-    // Format for datetime-local input
-    const year = date.getFullYear();
-    const month = String(date.getMonth() + 1).padStart(2, '0');
-    const day = String(date.getDate()).padStart(2, '0');
-    const hours = String(date.getHours()).padStart(2, '0');
-    const minutes = String(date.getMinutes()).padStart(2, '0');
-    return `${year}-${month}-${day}T${hours}:${minutes}`;
   };
 
   const handleCopyUrl = () => {
@@ -69,68 +30,6 @@ const UsernameInput: React.FC<UsernameInputProps> = ({
   return (
     <div className="space-y-2 mb-4">
       <form onSubmit={handleSubmit} className="bg-black/85 backdrop-blur-sm p-4 rounded-xl border border-white/20 shadow-xl space-y-3">
-        {/* Session Mode Selector */}
-        <div className="flex gap-2">
-          <button
-            type="button"
-            onClick={() => handleSessionModeChange('titled-tuesday')}
-            className={`flex-1 px-3 py-2 text-xs font-semibold rounded-lg transition-colors ${
-              sessionConfig.mode === 'titled-tuesday'
-                ? 'bg-blue-600 text-white'
-                : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
-            }`}
-          >
-            Titled Tuesday
-          </button>
-          <button
-            type="button"
-            onClick={() => handleSessionModeChange('custom')}
-            className={`flex-1 px-3 py-2 text-xs font-semibold rounded-lg transition-colors ${
-              sessionConfig.mode === 'custom'
-                ? 'bg-blue-600 text-white'
-                : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
-            }`}
-          >
-            Custom Session
-          </button>
-        </div>
-
-        {/* Custom Session Time Picker */}
-        {sessionConfig.mode === 'custom' && (
-          <div className="space-y-2">
-            <div className="flex gap-2">
-              <button
-                type="button"
-                onClick={() => handleTimeChange('now')}
-                className="px-3 py-1.5 bg-gray-700 hover:bg-gray-600 text-white text-xs font-medium rounded transition-colors"
-              >
-                Start Now
-              </button>
-              <button
-                type="button"
-                onClick={() => setShowSessionOptions(!showSessionOptions)}
-                className="px-3 py-1.5 bg-gray-700 hover:bg-gray-600 text-white text-xs font-medium rounded transition-colors"
-              >
-                {showSessionOptions ? 'Hide' : 'Set Time'}
-              </button>
-            </div>
-            {showSessionOptions && (
-              <input
-                type="datetime-local"
-                value={getLocalDateTimeString()}
-                onChange={(e) => handleTimeChange('custom', e.target.value)}
-                className="w-full bg-white/10 border border-white/30 rounded-lg px-3 py-2 text-white text-xs focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-              />
-            )}
-            {sessionConfig.startTime && (
-              <div className="text-xs text-gray-400">
-                Session starts: {new Date(sessionConfig.startTime * 1000).toLocaleString()}
-              </div>
-            )}
-          </div>
-        )}
-        
-        {/* Username Input */}
         <div className="flex gap-2">
           <input
             type="text"

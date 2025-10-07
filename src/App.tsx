@@ -3,9 +3,9 @@ import UsernameInput from './components/UsernameInput';
 import ScoreDisplay from './components/ScoreDisplay';
 import RoundResults from './components/RoundResults';
 import CustomizePanel from './components/CustomizePanel';
-import { fetchPlayerGames, filterSessionGames } from './services/chessComApi';
+import { fetchPlayerGames, filterTitledTuesdayGames } from './services/chessComApi';
 import { TitledTuesdayGame, GameResult } from './types';
-import { CustomizationOptions, DEFAULT_CUSTOMIZATION, SessionConfig, DEFAULT_SESSION } from './types/customization';
+import { CustomizationOptions, DEFAULT_CUSTOMIZATION } from './types/customization';
 
 function App() {
   const [username, setUsername] = useState<string>('');
@@ -13,7 +13,6 @@ function App() {
   const [isLoading, setIsLoading] = useState(false);
   const [lastGameCount, setLastGameCount] = useState(0);
   const [customization, setCustomization] = useState<CustomizationOptions>(DEFAULT_CUSTOMIZATION);
-  const [sessionConfig, setSessionConfig] = useState<SessionConfig>(DEFAULT_SESSION);
   const [isCustomizeOpen, setIsCustomizeOpen] = useState(false);
 
   useEffect(() => {
@@ -32,19 +31,10 @@ function App() {
       fontSize: params.get('fontSize') || DEFAULT_CUSTOMIZATION.fontSize,
     };
     
-    // Load session config from URL
-    const mode = params.get('sessionMode') as 'titled-tuesday' | 'custom' | null;
-    const startTimeParam = params.get('sessionStart');
-    const sessionOptions: SessionConfig = {
-      mode: mode || DEFAULT_SESSION.mode,
-      startTime: startTimeParam ? parseInt(startTimeParam) : undefined,
-    };
-    
     setCustomization(customOptions);
-    setSessionConfig(sessionOptions);
     
     if (usernameParam) {
-      handleLoadGames(usernameParam, sessionOptions);
+      handleLoadGames(usernameParam);
     }
   }, []);
 
@@ -54,12 +44,12 @@ function App() {
     const pollInterval = setInterval(async () => {
       try {
         const fetchedGames = await fetchPlayerGames(username);
-        const sessionGames = filterSessionGames(fetchedGames, username, sessionConfig);
+        const titledTuesdayGames = filterTitledTuesdayGames(fetchedGames, username);
         
-        if (sessionGames.length > lastGameCount) {
-          console.log(`New games detected: ${sessionGames.length} games`);
-          setGames(sessionGames);
-          setLastGameCount(sessionGames.length);
+        if (titledTuesdayGames.length > lastGameCount) {
+          console.log(`New games detected: ${titledTuesdayGames.length} games`);
+          setGames(titledTuesdayGames);
+          setLastGameCount(titledTuesdayGames.length);
         }
       } catch (error) {
         console.error('Error polling for new games:', error);
@@ -67,9 +57,9 @@ function App() {
     }, 30000);
 
     return () => clearInterval(pollInterval);
-  }, [username, lastGameCount, sessionConfig]);
+  }, [username, lastGameCount]);
 
-  const updateURL = (user?: string, customOptions?: CustomizationOptions, session?: SessionConfig) => {
+  const updateURL = (user?: string, customOptions?: CustomizationOptions) => {
     const params = new URLSearchParams(window.location.search);
     
     if (user) {
@@ -86,33 +76,23 @@ function App() {
     params.set('boxBgColor', options.boxBgColor);
     params.set('fontSize', options.fontSize);
     
-    const sessionOpts = session || sessionConfig;
-    params.set('sessionMode', sessionOpts.mode);
-    if (sessionOpts.startTime) {
-      params.set('sessionStart', sessionOpts.startTime.toString());
-    } else {
-      params.delete('sessionStart');
-    }
+    params.delete('sessionMode');
+    params.delete('sessionStart');
     
     window.history.replaceState({}, '', `${window.location.pathname}?${params}`);
   };
 
-  const handleLoadGames = async (user: string, session?: SessionConfig) => {
+  const handleLoadGames = async (user: string) => {
     setIsLoading(true);
     setUsername(user);
     
-    const sessionToUse = session || sessionConfig;
-    if (session) {
-      setSessionConfig(session);
-    }
-    
-    updateURL(user, undefined, sessionToUse);
+    updateURL(user);
 
     try {
       const fetchedGames = await fetchPlayerGames(user);
-      const sessionGames = filterSessionGames(fetchedGames, user, sessionToUse);
-      setGames(sessionGames);
-      setLastGameCount(sessionGames.length);
+      const titledTuesdayGames = filterTitledTuesdayGames(fetchedGames, user);
+      setGames(titledTuesdayGames);
+      setLastGameCount(titledTuesdayGames.length);
     } catch (error) {
       console.error('Error loading games:', error);
     } finally {
@@ -135,9 +115,9 @@ function App() {
 
   const getFontSizeValue = () => {
     switch (customization.fontSize) {
-      case 'small': return { score: '28px', label: '11px', round: '9px' };
-      case 'large': return { score: '36px', label: '13px', round: '11px' };
-      default: return { score: '32px', label: '12px', round: '10px' };
+      case 'small': return { score: '30px', label: '12px', round: '10px' };
+      case 'large': return { score: '40px', label: '15px', round: '13px' };
+      default: return { score: '36px', label: '14px', round: '12px' };
     }
   };
 
@@ -148,13 +128,11 @@ function App() {
       className="min-h-screen p-6 transition-colors duration-300"
       style={{ backgroundColor: customization.bgColor }}
     >
-      <div className="w-full max-w-[360px] mx-auto">
+      <div className="w-full max-w-[320px] mx-auto">
         <UsernameInput 
           onSubmit={handleLoadGames} 
           onCustomize={() => setIsCustomizeOpen(true)}
           isLoading={isLoading}
-          sessionConfig={sessionConfig}
-          onSessionChange={setSessionConfig}
         />
         
         {username && (

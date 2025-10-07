@@ -50,7 +50,7 @@ const RoundResults: React.FC<RoundResultsProps> = ({ results, maxRounds = 11, cu
         {rounds.map(({ round, result }) => (
           <div key={round} className="flex flex-col items-center min-w-0">
             <div
-              className="w-full max-w-[26px] h-[26px] rounded flex items-center justify-center font-bold transition-all duration-200 hover:scale-110"
+              className="w-full max-w-[26px] h-[32px] rounded flex items-center justify-center font-bold transition-all duration-200 hover:scale-110"
               style={{
                 backgroundColor: getResultColor(result),
                 fontSize: fontSize.round,
