@@ -128,7 +128,7 @@ function App() {
       className="min-h-screen p-6 transition-colors duration-300"
       style={{ backgroundColor: customization.bgColor }}
     >
-      <div className="w-full max-w-[320px] mx-auto">
+      <div className="w-full max-w-[280px] mx-auto">
         <UsernameInput 
           onSubmit={handleLoadGames} 
           onCustomize={() => setIsCustomizeOpen(true)}

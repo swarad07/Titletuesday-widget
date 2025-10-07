@@ -46,11 +46,11 @@ const RoundResults: React.FC<RoundResultsProps> = ({ results, maxRounds = 11, cu
       >
         Round Results
       </div>
-      <div className="grid grid-cols-11 gap-1 w-full">{/* Round boxes */}
+      <div className="grid grid-cols-2 gap-2 w-full">{/* Round boxes */}
         {rounds.map(({ round, result }) => (
-          <div key={round} className="flex flex-col items-center min-w-0">
+          <div key={round} className="flex items-center gap-3 min-w-0">
             <div
-              className="w-full max-w-[26px] h-[32px] rounded flex items-center justify-center font-bold transition-all duration-200 hover:scale-110"
+              className="w-[48px] h-[48px] flex-shrink-0 rounded flex items-center justify-center font-bold transition-all duration-200 hover:scale-105"
               style={{
                 backgroundColor: getResultColor(result),
                 fontSize: fontSize.round,
@@ -61,13 +61,13 @@ const RoundResults: React.FC<RoundResultsProps> = ({ results, maxRounds = 11, cu
               {result !== 'none' && (result === 'win' ? 'W' : result === 'loss' ? 'L' : 'D')}
             </div>
             <div 
-              className="mt-1 font-medium whitespace-nowrap"
+              className="font-semibold whitespace-nowrap"
               style={{
-                fontSize: `calc(${fontSize.round} - 1px)`,
-                color: `${customization.textColor}80`,
+                fontSize: fontSize.label,
+                color: `${customization.textColor}cc`,
               }}
             >
-              R{round}
+              Round {round}
             </div>
           </div>
         ))}

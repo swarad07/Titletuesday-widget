@@ -12,7 +12,7 @@ export interface CustomizationOptions {
 export const DEFAULT_CUSTOMIZATION: CustomizationOptions = {
   bgColor: '#00FF00',
   textColor: '#ffffff',
-  winColor: '#FFD700',
+  winColor: '#0EA5E9',
   lossColor: '#ef4444',
   drawColor: '#9ca3af',
   noneColor: '#374151',
