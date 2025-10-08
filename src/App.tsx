@@ -18,9 +18,10 @@ function App() {
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     const usernameParam = params.get('username');
-    
+
     // Load customization from URL
     const customOptions: CustomizationOptions = {
+      theme: (params.get('theme') as 'dark' | 'light') || DEFAULT_CUSTOMIZATION.theme,
       bgColor: params.get('bgColor') || DEFAULT_CUSTOMIZATION.bgColor,
       textColor: params.get('textColor') || DEFAULT_CUSTOMIZATION.textColor,
       winColor: params.get('winColor') || DEFAULT_CUSTOMIZATION.winColor,
@@ -30,9 +31,9 @@ function App() {
       boxBgColor: params.get('boxBgColor') || DEFAULT_CUSTOMIZATION.boxBgColor,
       fontSize: params.get('fontSize') || DEFAULT_CUSTOMIZATION.fontSize,
     };
-    
+
     setCustomization(customOptions);
-    
+
     if (usernameParam) {
       handleLoadGames(usernameParam);
     }
@@ -45,7 +46,7 @@ function App() {
       try {
         const fetchedGames = await fetchPlayerGames(username);
         const titledTuesdayGames = filterTitledTuesdayGames(fetchedGames, username);
-        
+
         if (titledTuesdayGames.length > lastGameCount) {
           console.log(`New games detected: ${titledTuesdayGames.length} games`);
           setGames(titledTuesdayGames);
@@ -61,12 +62,13 @@ function App() {
 
   const updateURL = (user?: string, customOptions?: CustomizationOptions) => {
     const params = new URLSearchParams(window.location.search);
-    
+
     if (user) {
       params.set('username', user);
     }
-    
+
     const options = customOptions || customization;
+    params.set('theme', options.theme);
     params.set('bgColor', options.bgColor);
     params.set('textColor', options.textColor);
     params.set('winColor', options.winColor);
@@ -75,17 +77,17 @@ function App() {
     params.set('noneColor', options.noneColor);
     params.set('boxBgColor', options.boxBgColor);
     params.set('fontSize', options.fontSize);
-    
+
     params.delete('sessionMode');
     params.delete('sessionStart');
-    
+
     window.history.replaceState({}, '', `${window.location.pathname}?${params}`);
   };
 
   const handleLoadGames = async (user: string) => {
     setIsLoading(true);
     setUsername(user);
-    
+
     updateURL(user);
 
     try {
@@ -110,7 +112,7 @@ function App() {
     if (game.result === 'draw') return total + 0.5;
     return total;
   }, 0);
-  
+
   const results: GameResult[] = games.map(g => g.result);
 
   const getFontSizeValue = () => {
@@ -124,17 +126,17 @@ function App() {
   const fontSizes = getFontSizeValue();
 
   return (
-    <div 
+    <div
       className="min-h-screen p-6 transition-colors duration-300"
       style={{ backgroundColor: customization.bgColor }}
     >
       <div className="w-full max-w-[280px] mx-auto">
-        <UsernameInput 
-          onSubmit={handleLoadGames} 
+        <UsernameInput
+          onSubmit={handleLoadGames}
           onCustomize={() => setIsCustomizeOpen(true)}
           isLoading={isLoading}
         />
-        
+
         {username && (
           <div className="animate-in fade-in duration-500">
             <ScoreDisplay
@@ -143,8 +145,8 @@ function App() {
               customization={customization}
               fontSize={fontSizes}
             />
-            <RoundResults 
-              results={results} 
+            <RoundResults
+              results={results}
               maxRounds={11}
               customization={customization}
               fontSize={fontSizes}

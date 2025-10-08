@@ -6,9 +6,9 @@ interface UsernameInputProps {
   isLoading: boolean;
 }
 
-const UsernameInput: React.FC<UsernameInputProps> = ({ 
-  onSubmit, 
-  onCustomize, 
+const UsernameInput: React.FC<UsernameInputProps> = ({
+  onSubmit,
+  onCustomize,
   isLoading
 }) => {
   const [username, setUsername] = useState('');
@@ -30,7 +30,7 @@ const UsernameInput: React.FC<UsernameInputProps> = ({
   return (
     <div className="space-y-2 mb-4">
       <form onSubmit={handleSubmit} className="bg-black/85 backdrop-blur-sm p-4 rounded-xl border border-white/20 shadow-xl space-y-3">
-        <div className="flex gap-2">
+        <div className="flex flex-col gap-2">
           <input
             type="text"
             value={username}
@@ -48,7 +48,7 @@ const UsernameInput: React.FC<UsernameInputProps> = ({
           </button>
         </div>
       </form>
-      
+
       <div className="flex gap-2">
         <button
           type="button"
