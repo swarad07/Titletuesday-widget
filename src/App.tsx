@@ -22,7 +22,7 @@ function App() {
     // Load customization from URL
     const customOptions: CustomizationOptions = {
       theme: (params.get('theme') as 'dark' | 'light') || DEFAULT_CUSTOMIZATION.theme,
-      themePreset: (params.get('themePreset') as 'classic' | 'ocean' | 'forest' | 'sunset' | 'purple') || DEFAULT_CUSTOMIZATION.themePreset,
+      themePreset: (params.get('themePreset') as 'classic' | 'ocean' | 'crimson' | 'sunset' | 'purple') || DEFAULT_CUSTOMIZATION.themePreset,
       bgColor: params.get('bgColor') || DEFAULT_CUSTOMIZATION.bgColor,
       textColor: params.get('textColor') || DEFAULT_CUSTOMIZATION.textColor,
       winColor: params.get('winColor') || DEFAULT_CUSTOMIZATION.winColor,

@@ -1,5 +1,5 @@
 export type Theme = 'dark' | 'light';
-export type ThemePreset = 'classic' | 'ocean' | 'forest' | 'sunset' | 'purple';
+export type ThemePreset = 'classic' | 'ocean' | 'crimson' | 'sunset' | 'purple';
 
 export interface CustomizationOptions {
   theme: Theme;
@@ -44,14 +44,14 @@ export const DARK_THEME_PRESETS: Record<ThemePreset, ThemeColors> = {
     noneColor: '#334155',
     boxBgColor: 'rgba(15, 23, 42, 0.85)',
   },
-  forest: {
+  crimson: {
     bgColor: '#00FF00',
-    textColor: '#ecfdf5',
-    winColor: '#10b981',
-    lossColor: '#fb923c',
-    drawColor: '#a3a3a3',
+    textColor: '#ffe4e6',
+    winColor: '#ec4899',
+    lossColor: '#dc2626',
+    drawColor: '#94a3b8',
     noneColor: '#404040',
-    boxBgColor: 'rgba(20, 30, 20, 0.85)',
+    boxBgColor: 'rgba(30, 10, 20, 0.85)',
   },
   sunset: {
     bgColor: '#00FF00',
@@ -78,7 +78,7 @@ export const LIGHT_THEME_PRESETS: Record<ThemePreset, ThemeColors> = {
   classic: {
     bgColor: '#00FF00',
     textColor: '#1f2937',
-    winColor: '#10b981',
+    winColor: '#3b82f6',
     lossColor: '#f87171',
     drawColor: '#6b7280',
     noneColor: '#d1d5db',
@@ -93,14 +93,14 @@ export const LIGHT_THEME_PRESETS: Record<ThemePreset, ThemeColors> = {
     noneColor: '#cbd5e1',
     boxBgColor: 'rgba(240, 249, 255, 0.95)',
   },
-  forest: {
+  crimson: {
     bgColor: '#00FF00',
-    textColor: '#14532d',
-    winColor: '#059669',
-    lossColor: '#ea580c',
+    textColor: '#881337',
+    winColor: '#f43f5e',
+    lossColor: '#dc2626',
     drawColor: '#737373',
-    noneColor: '#d4d4d4',
-    boxBgColor: 'rgba(240, 253, 244, 0.95)',
+    noneColor: '#fecdd3',
+    boxBgColor: 'rgba(255, 241, 242, 0.95)',
   },
   sunset: {
     bgColor: '#00FF00',
@@ -125,7 +125,7 @@ export const LIGHT_THEME_PRESETS: Record<ThemePreset, ThemeColors> = {
 export const THEME_PRESET_NAMES: Record<ThemePreset, string> = {
   classic: '🎨 Classic',
   ocean: '🌊 Ocean Blue',
-  forest: '🌲 Forest Green',
+  crimson: '💎 Crimson Rose',
   sunset: '🌅 Sunset',
   purple: '💜 Purple Haze',
 };
