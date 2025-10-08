@@ -1,5 +1,5 @@
 import React from 'react';
-import { CustomizationOptions, DEFAULT_CUSTOMIZATION } from '../types/customization';
+import { CustomizationOptions, DEFAULT_CUSTOMIZATION, getThemeColors, Theme } from '../types/customization';
 
 interface CustomizePanelProps {
   isOpen: boolean;
@@ -18,6 +18,15 @@ const CustomizePanel: React.FC<CustomizePanelProps> = ({
 
   const handleReset = () => {
     onOptionsChange(DEFAULT_CUSTOMIZATION);
+  };
+
+  const handleThemeToggle = (theme: Theme) => {
+    const themeColors = getThemeColors(theme);
+    onOptionsChange({
+      ...options,
+      theme,
+      ...themeColors,
+    });
   };
 
   const ColorPicker = ({ label, value, onChange }: { label: string; value: string; onChange: (value: string) => void }) => (
@@ -57,9 +66,47 @@ const CustomizePanel: React.FC<CustomizePanelProps> = ({
             </svg>
           </button>
         </div>
-        
+
         {/* Content */}
         <div className="flex-1 overflow-y-auto p-6 space-y-6">
+          {/* Theme Toggle Section */}
+          <div className="space-y-4 pb-4 border-b border-gray-700/50">
+            <h3 className="text-sm font-semibold text-white uppercase tracking-wider flex items-center gap-2">
+              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+              </svg>
+              Theme
+            </h3>
+            <div className="grid grid-cols-2 gap-3">
+              <button
+                onClick={() => handleThemeToggle('dark')}
+                className={`px-4 py-3 rounded-lg font-medium text-sm transition-all flex items-center justify-center gap-2 ${
+                  options.theme === 'dark'
+                    ? 'bg-blue-600 text-white shadow-lg shadow-blue-600/30'
+                    : 'bg-gray-800 text-gray-400 hover:bg-gray-700 hover:text-white'
+                }`}
+              >
+                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+                </svg>
+                Dark
+              </button>
+              <button
+                onClick={() => handleThemeToggle('light')}
+                className={`px-4 py-3 rounded-lg font-medium text-sm transition-all flex items-center justify-center gap-2 ${
+                  options.theme === 'light'
+                    ? 'bg-blue-600 text-white shadow-lg shadow-blue-600/30'
+                    : 'bg-gray-800 text-gray-400 hover:bg-gray-700 hover:text-white'
+                }`}
+              >
+                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+                </svg>
+                Light
+              </button>
+            </div>
+          </div>
+
           {/* Background Section */}
           <div className="space-y-4">
             <h3 className="text-sm font-semibold text-white uppercase tracking-wider flex items-center gap-2">
